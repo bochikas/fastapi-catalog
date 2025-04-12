@@ -29,7 +29,7 @@ async def lifespan(app: FastAPI):
     await drop_db()
 
 
-app = FastAPI(lifespan=lifespan)
+app = FastAPI(title="Product Catalog API", lifespan=lifespan)
 
 app.include_router(catalog_router, tags=["catalog"])
 app.include_router(product_router, tags=["product"])
