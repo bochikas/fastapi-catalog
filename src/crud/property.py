@@ -22,7 +22,6 @@ async def create_property(data: PropertyCreateSchema, db: AsyncSession):
         for property_value in data.values:
             prop.values.append(PropertyValue(uid=property_value.value_uid, value=property_value.value))
     elif data.type is PropertyType.int:
-        prop.int_value = data.int_value
         prop.values = []
     else:
         raise UnknownPropertyTypeError(data.type)

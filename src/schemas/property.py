@@ -18,7 +18,6 @@ class PropertySchema(BaseModel):
     uid: UUID
     name: str | None
     type: PropertyType
-    int_value: int | None = None
     values: list[PropertyValueSchema] | None = None
 
     class Config:
@@ -29,7 +28,6 @@ class PropertyCreateSchema(BaseModel):
     uid: UUID
     name: str
     type: PropertyType
-    int_value: int | None = None
     values: list[PropertyValueSchema] | None = None
 
     class Config:
