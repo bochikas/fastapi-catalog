@@ -1,13 +1,17 @@
 from contextlib import asynccontextmanager
+from logging import config as logging_config
 
 from fastapi import FastAPI
 
+from config.logging import LOGGING_CONFIG
 from db.database import engine
 from db.models import Base
 from db.seed_db import seed_db
 from routers.catalog import router as catalog_router
 from routers.product import router as product_router
 from routers.property import router as property_router
+
+logging_config.dictConfig(LOGGING_CONFIG)
 
 
 async def create_db():
