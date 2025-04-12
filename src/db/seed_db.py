@@ -13,6 +13,7 @@ async def seed_db():  # noqa C901
         with open(f"{BASE_DIR}/test_data.json", "r", encoding="utf-8") as file:
             data = json.load(file)
 
+        # Сначала разбиваем по свойствам
         property_map = {}
         for product in data["products"]:
             for prop in product["properties"]:
@@ -25,23 +26,24 @@ async def seed_db():  # noqa C901
                 else:
                     property_map[uid]["type"] = PropertyType.int
                     property_map[uid]["value"] = prop["value"]
-
+        # Сохраняем свойства
         for p in property_map.values():
-            prop = Property(uid=p["uid"], type=p["type"])
+            new_property = Property(uid=p["uid"], type=p["type"])
             if p["type"] is PropertyType.list:
                 for val_uid, val_value in p["values"].items():
-                    prop.values.append(PropertyValue(uid=val_uid, value=val_value))
-            elif p["type"] is PropertyType.int:
-                prop.int_value = p["value"]
-            db.add(prop)
+                    new_property.values.append(PropertyValue(uid=val_uid, value=val_value))
+            db.add(new_property)
         await db.commit()
 
+        # И уже потом сохраняем товары
         for product in data["products"]:
             new_product = Product(uid=product["uid"], name=product.get("name"))
             for pp in product["properties"]:
                 product_property = ProductProperty(property_id=pp["uid"])
-                if "value_uid" in p:
+                if "value_uid" in pp:
                     product_property.value_uid = pp["value_uid"]
+                else:
+                    product_property.int_value = pp["value"]
                 new_product.properties.append(product_property)
             db.add(new_product)
         await db.commit()
