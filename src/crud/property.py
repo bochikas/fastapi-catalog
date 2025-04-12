@@ -16,12 +16,10 @@ async def create_property(data: PropertyCreateSchema, db: AsyncSession):
     if (await db.execute(select(Property).filter_by(uid=data.uid))).scalar():
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Property exists")
     prop = Property(uid=data.uid, name=data.name, type=data.type)
-    if data.type is PropertyType.list:
-        if not data.values:
-            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="List property must have values")
+    if data.type is PropertyType.LIST:
         for property_value in data.values:
             prop.values.append(PropertyValue(uid=property_value.value_uid, value=property_value.value))
-    elif data.type is PropertyType.int:
+    elif data.type is PropertyType.INT:
         prop.values = []
     else:
         raise UnknownPropertyTypeError(data.type)

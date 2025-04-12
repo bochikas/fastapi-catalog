@@ -1,6 +1,6 @@
 from uuid import UUID
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, model_validator
 
 from db.base import PropertyType
 
@@ -14,7 +14,7 @@ class PropertyValueSchema(BaseModel):
         validate_by_name = True
 
 
-class PropertySchema(BaseModel):
+class PropertyResponseSchema(BaseModel):
     uid: UUID
     name: str | None
     type: PropertyType
@@ -32,3 +32,10 @@ class PropertyCreateSchema(BaseModel):
 
     class Config:
         from_attributes = True
+
+    @model_validator(mode="after")
+    @classmethod
+    def check_value(cls, data) -> dict:
+        if data.get("type") is PropertyType.LIST and not data.get("values"):
+            raise ValueError("List property must have values")
+        return data

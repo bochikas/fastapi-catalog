@@ -6,19 +6,19 @@ from starlette import status
 
 from crud.product import create_product, delete_product, get_product
 from dependencies.db import get_db
-from schemas.product import ProductCreateSchema, ProductSchema
+from schemas.product import ProductCreateSchema, ProductResponseSchema
 
 router = APIRouter()
 
 
-@router.post("/product/", response_model=ProductSchema, status_code=status.HTTP_201_CREATED)
+@router.post("/product/", response_model=ProductResponseSchema, status_code=status.HTTP_201_CREATED)
 async def create(data: ProductCreateSchema, db: AsyncSession = Depends(get_db)):
     """Создание товара."""
 
     return await create_product(data, db)
 
 
-@router.get("/product/{uid}", response_model=ProductSchema, status_code=status.HTTP_200_OK)
+@router.get("/product/{uid}", response_model=ProductResponseSchema, status_code=status.HTTP_200_OK)
 async def get(uid: UUID, db: AsyncSession = Depends(get_db)):
     """Получение товара по UID."""
 

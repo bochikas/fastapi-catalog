@@ -28,7 +28,7 @@ class ProductCreateSchema(BaseModel):
     properties: list[ProductPropertyCreateSchema]
 
 
-class ProductSchema(BaseModel):
+class ProductResponseSchema(BaseModel):
     uid: UUID
     name: str | None
     properties: list[ProductPropertyListSchema | ProductPropertyIntSchema]

@@ -1,7 +1,7 @@
 import os
 import time
 import uuid
-from enum import StrEnum, auto
+from enum import StrEnum
 
 from sqlalchemy.ext.asyncio import AsyncAttrs
 from sqlalchemy.orm import DeclarativeBase, Mapped, declared_attr, mapped_column
@@ -42,5 +42,5 @@ class Base(AsyncAttrs, DeclarativeBase):
 
 
 class PropertyType(StrEnum):
-    list = auto()
-    int = auto()
+    LIST = "list"
+    INT = "int"

@@ -15,9 +15,9 @@ async def seed_db():  # noqa C901
 
         # Сначала сохраняем свойства
         for prop in data["properties"]:
-            new_property = Property(uid=prop["uid"], name=prop["name"], type=PropertyType.int)
+            new_property = Property(uid=prop["uid"], name=prop["name"], type=PropertyType.INT)
             if property_values := prop.get("values"):
-                new_property.type = PropertyType.list
+                new_property.type = PropertyType.LIST
                 for property_value in property_values:
                     new_property_value = PropertyValue()
                     for key, value in property_value.items():

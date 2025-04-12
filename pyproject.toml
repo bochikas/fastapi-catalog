@@ -77,8 +77,10 @@ docstring-style = "numpy"
 exclude = ["**/__pycache__", ".venv", "**/tests/**", "flake-report", "venv", "test_data.json", "seed_db.py"]
 min-name-length = 1
 per-file-ignores = [
+    "src/routers/catalog.py:WPS232,B008",
     "src/routers/*:B008",
     "src/crud/product.py:WPS238,WPS232",
+    "src/crud/common.py:WPS232",
 ]
 
 [tool.ruff]

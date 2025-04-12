@@ -6,12 +6,12 @@ from starlette import status
 
 from crud.property import create_property, delete_property
 from dependencies.db import get_db
-from schemas.property import PropertyCreateSchema
+from schemas.property import PropertyCreateSchema, PropertyResponseSchema
 
 router = APIRouter()
 
 
-@router.post("/properties/", status_code=status.HTTP_201_CREATED, response_model=PropertyCreateSchema)
+@router.post("/properties/", status_code=status.HTTP_201_CREATED, response_model=PropertyResponseSchema)
 async def create(data: PropertyCreateSchema, db: AsyncSession = Depends(get_db)):
     """Создание свойства."""
 

@@ -8,10 +8,10 @@ from starlette import status
 from crud.common import product_to_schema
 from db.models import Product, ProductProperty, Property, PropertyType, PropertyValue
 from exceptions import UnknownPropertyTypeError
-from schemas.product import ProductCreateSchema, ProductSchema
+from schemas.product import ProductCreateSchema, ProductResponseSchema
 
 
-async def create_product(data: ProductCreateSchema, db: AsyncSession) -> ProductSchema:
+async def create_product(data: ProductCreateSchema, db: AsyncSession) -> ProductResponseSchema:
     """Создание товара."""
 
     if (await db.execute(select(Product).filter_by(uid=data.uid))).first():
@@ -23,13 +23,13 @@ async def create_product(data: ProductCreateSchema, db: AsyncSession) -> Product
         if not property_obj:
             raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=f"Property {prop.uid} not found")
 
-        if property_obj.type is PropertyType.int:
+        if property_obj.type is PropertyType.INT:
             if prop.value is None:
                 raise HTTPException(
                     status_code=status.HTTP_400_BAD_REQUEST, detail=f"Type of property id {prop.uid} is not int"
                 )
             product.properties.append(ProductProperty(property_id=prop.uid, int_value=prop.value))
-        elif property_obj.type is PropertyType.list:
+        elif property_obj.type is PropertyType.LIST:
             value = (await db.execute(select(PropertyValue).filter_by(uid=prop.value_uid))).first()
             if not value:
                 raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=f"Value {prop.value_uid} not found")
@@ -42,7 +42,7 @@ async def create_product(data: ProductCreateSchema, db: AsyncSession) -> Product
     return await product_to_schema(product)
 
 
-async def get_product(uid: UUID, db: AsyncSession) -> ProductSchema:
+async def get_product(uid: UUID, db: AsyncSession) -> ProductResponseSchema:
     """Получение товара по UID."""
 
     result = await db.execute(select(Product).filter_by(uid=uid))
