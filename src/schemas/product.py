@@ -9,11 +9,17 @@ class ProductPropertyCreateSchema(BaseModel):
     value: int | None = None
 
 
-class ProductPropertySchema(BaseModel):
+class ProductPropertyListSchema(BaseModel):
     uid: UUID
-    name: str | None
-    value_uid: UUID | None = None
-    value: str | int | None
+    name: str
+    value_uid: UUID
+    value: str
+
+
+class ProductPropertyIntSchema(BaseModel):
+    uid: UUID
+    name: str
+    value: int
 
 
 class ProductCreateSchema(BaseModel):
@@ -25,7 +31,7 @@ class ProductCreateSchema(BaseModel):
 class ProductSchema(BaseModel):
     uid: UUID
     name: str | None
-    properties: list[ProductPropertySchema]
+    properties: list[ProductPropertyListSchema | ProductPropertyIntSchema]
 
     class Config:
         from_attributes = True

@@ -1,5 +1,5 @@
 from db.models import Product, PropertyType
-from schemas.product import ProductPropertySchema, ProductSchema
+from schemas.product import ProductPropertyIntSchema, ProductPropertyListSchema, ProductSchema
 
 
 async def product_to_schema(product: Product) -> ProductSchema:
@@ -8,10 +8,10 @@ async def product_to_schema(product: Product) -> ProductSchema:
     props = []
     for pp in product.properties:
         if pp.property.type is PropertyType.int:
-            props.append(ProductPropertySchema(uid=pp.property.uid, name=pp.property.name, value=pp.int_value))
+            props.append(ProductPropertyIntSchema(uid=pp.property.uid, name=pp.property.name, value=pp.int_value))
         else:
             props.append(
-                ProductPropertySchema(
+                ProductPropertyListSchema(
                     uid=pp.property.uid,
                     name=pp.property.name,
                     value_uid=pp.value_uid,
