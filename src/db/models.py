@@ -11,10 +11,11 @@ class Property(Base):
 
     __tablename__ = "properties"
 
+    int_value: Mapped[int | None]
     name: Mapped[str | None]
     type: Mapped[PropertyType]
 
-    values = relationship("PropertyValue", back_populates="property", cascade="all, delete-orphan")
+    values = relationship("PropertyValue", back_populates="property", cascade="all, delete-orphan", lazy="selectin")
 
 
 class PropertyValue(Base):
@@ -40,8 +41,6 @@ class ProductProperty(Base):
     """Свойства товара."""
 
     __tablename__ = "product_properties"
-
-    int_value: Mapped[int | None]
 
     product_id: Mapped[UUID] = mapped_column(ForeignKey("products.uid"))
     property_id: Mapped[UUID] = mapped_column(ForeignKey("properties.uid"))
