@@ -5,6 +5,7 @@ from fastapi import FastAPI
 from db.database import engine
 from db.models import Base
 from db.seed_db import seed_db
+from routers.product import router as product_router
 from routers.property import router as property_router
 
 
@@ -29,4 +30,5 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(lifespan=lifespan)
 
+app.include_router(product_router, tags=["product"])
 app.include_router(property_router, tags=["property"])

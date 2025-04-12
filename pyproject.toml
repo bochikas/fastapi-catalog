@@ -78,6 +78,7 @@ exclude = ["**/__pycache__", ".venv", "**/tests/**", "flake-report", "venv", "te
 min-name-length = 1
 per-file-ignores = [
     "src/routers/*:B008",
+    "src/crud/product.py:WPS238,WPS232",
 ]
 
 [tool.ruff]
