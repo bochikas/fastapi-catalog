@@ -74,7 +74,7 @@ max-try-body-length = 5
 max-line-length = 120
 strictness = "long"
 docstring-style = "numpy"
-exclude = ["**/__pycache__", ".venv", "**/tests/**", "flake-report", "venv"]
+exclude = ["**/__pycache__", ".venv", "**/tests/**", "flake-report", "venv", "test_data.json", "seed_db.py"]
 min-name-length = 1
 per-file-ignores = [
     "app/config/*:F821",
@@ -93,7 +93,8 @@ extend-exclude = [
     ".pre-commit-config.yaml",
     ".env.example",
     "*.yml",
-    ".gitignore"
+    ".gitignore",
+    "test_data.json"
 ]
 
 [tool.ruff.lint.extend-per-file-ignores]
