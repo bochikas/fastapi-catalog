@@ -1,40 +1,27 @@
-from contextlib import asynccontextmanager
-from logging import config as logging_config
+import logging
 
 from fastapi import FastAPI
+from starlette import status
 
 from config.logging import LOGGING_CONFIG
-from db.database import engine
-from db.models import Base
 from db.seed_db import seed_db
 from routers.catalog import router as catalog_router
 from routers.product import router as product_router
 from routers.property import router as property_router
 
-logging_config.dictConfig(LOGGING_CONFIG)
+logging.config.dictConfig(LOGGING_CONFIG)
+
+logger = logging.getLogger(__name__)
 
 
-async def create_db():
-    async with engine.begin() as conn:
-        await conn.run_sync(Base.metadata.create_all)
+app = FastAPI(title="Product Catalog API")
+
+app.include_router(catalog_router)
+app.include_router(product_router)
+app.include_router(property_router)
 
 
-async def drop_db():
-    async with engine.begin() as conn:
-        await conn.run_sync(Base.metadata.drop_all)
-
-
-@asynccontextmanager
-async def lifespan(app: FastAPI):
-    await create_db()
+@app.post("/seed-db", status_code=status.HTTP_200_OK, tags=["Common"])
+async def root():
     await seed_db()
-
-    yield
-    await drop_db()
-
-
-app = FastAPI(title="Product Catalog API", lifespan=lifespan)
-
-app.include_router(catalog_router, tags=["catalog"])
-app.include_router(product_router, tags=["product"])
-app.include_router(property_router, tags=["property"])
+    return {"message": "DB filled successfully"}

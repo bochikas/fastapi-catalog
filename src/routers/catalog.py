@@ -7,7 +7,7 @@ from crud.catalog import get_filter_statistics, get_filtered_products
 from dependencies.db import get_db
 from schemas.catalog import CatalogFilterResponseSchema, CatalogResponseSchema, SortType
 
-router = APIRouter()
+router = APIRouter(prefix="/catalog", tags=["Catalog"])
 
 
 def _prepare_filters(allowed_params: set, query_params: QueryParams):
@@ -22,7 +22,7 @@ def _prepare_filters(allowed_params: set, query_params: QueryParams):
     return filters
 
 
-@router.get("/catalog/", status_code=status.HTTP_200_OK, response_model=CatalogResponseSchema)
+@router.get("/", status_code=status.HTTP_200_OK, response_model=CatalogResponseSchema)
 async def catalog(
     request: Request,
     name: str | None = None,
@@ -39,7 +39,7 @@ async def catalog(
     return await get_filtered_products(db, name, sort, page, page_size, filters)
 
 
-@router.get("/catalog/filter/", status_code=status.HTTP_200_OK, response_model=CatalogFilterResponseSchema)
+@router.get("/filter/", status_code=status.HTTP_200_OK, response_model=CatalogFilterResponseSchema)
 async def catalog_filter(
     request: Request,
     name: str | None = None,

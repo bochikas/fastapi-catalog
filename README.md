@@ -40,7 +40,8 @@ POSTGRES_PORT=5432
 
 ### 4. Применение миграций
 ```bash
-alembic upgrade head
+cd src
+poetry run alembic upgrade head
 ```
 
 ### 5. Запуск сервера
@@ -51,3 +52,10 @@ poetry run uvicorn main:app
 После запуска, API будет доступно по адресу http://127.0.0.1:8000
 
 Документация Swagger доступна по адресу http://127.0.0.1:8000/docs
+
+### 6. Заполнение базы тестовыми данными
+
+Выполните запрос
+```
+POST: http://127.0.0.1:8000/seed-db
+```
