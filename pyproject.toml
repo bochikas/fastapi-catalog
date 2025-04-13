@@ -110,6 +110,7 @@ extend-exclude = [
     "test_data.json",
     "migrations",
     "alembic.ini",
+    "README.md",
 ]
 
 [tool.ruff.lint.extend-per-file-ignores]
