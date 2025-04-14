@@ -14,11 +14,20 @@ class PropertyValueSchema(BaseModel):
         validate_by_name = True
 
 
-class PropertyResponseSchema(BaseModel):
+class PropertyListResponseSchema(BaseModel):
     uid: UUID
-    name: str | None
+    name: str
     type: PropertyType
-    values: list[PropertyValueSchema] | None = None
+    values: list[PropertyValueSchema]
+
+    class Config:
+        from_attributes = True
+
+
+class PropertyIntResponseSchema(BaseModel):
+    uid: UUID
+    name: str
+    type: PropertyType
 
     class Config:
         from_attributes = True
@@ -33,7 +42,7 @@ class PropertyCreateSchema(BaseModel):
     class Config:
         from_attributes = True
 
-    @model_validator(mode="after")
+    @model_validator(mode="before")
     @classmethod
     def check_value(cls, data) -> dict:
         if data.get("type") is PropertyType.LIST and not data.get("values"):

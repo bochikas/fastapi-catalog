@@ -52,7 +52,7 @@ async def get_product(uid: UUID, db: AsyncSession) -> ProductResponseSchema:
     return await product_to_schema(product)
 
 
-async def delete_product(uid: UUID, db: AsyncSession):
+async def delete_product(uid: UUID, db: AsyncSession) -> None:
     """Удаление товара по UID."""
 
     result = await db.execute(select(Product).filter_by(uid=uid))

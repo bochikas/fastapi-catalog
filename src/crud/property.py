@@ -5,12 +5,15 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from starlette import status
 
+from crud.common import property_to_schema
 from db.models import Property, PropertyType, PropertyValue
 from exceptions import UnknownPropertyTypeError
-from schemas.property import PropertyCreateSchema
+from schemas.property import PropertyCreateSchema, PropertyIntResponseSchema, PropertyListResponseSchema
 
 
-async def create_property(data: PropertyCreateSchema, db: AsyncSession):
+async def create_property(
+    data: PropertyCreateSchema, db: AsyncSession
+) -> PropertyIntResponseSchema | PropertyListResponseSchema:
     """Создание свойства."""
 
     if (await db.execute(select(Property).filter_by(uid=data.uid))).scalar():
@@ -25,10 +28,10 @@ async def create_property(data: PropertyCreateSchema, db: AsyncSession):
         raise UnknownPropertyTypeError(data.type)
     db.add(prop)
     await db.commit()
-    return prop
+    return await property_to_schema(prop)
 
 
-async def delete_property(uid: UUID, db: AsyncSession):
+async def delete_property(uid: UUID, db: AsyncSession) -> None:
     """Удаление свойства."""
 
     result = await db.execute(select(Property).filter_by(uid=uid))
