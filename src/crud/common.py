@@ -1,4 +1,4 @@
-from sqlalchemy import select
+from sqlalchemy import and_, select
 
 from db.models import Product, ProductProperty, PropertyType
 from schemas.product import ProductPropertyIntSchema, ProductPropertyListSchema, ProductResponseSchema
@@ -31,10 +31,20 @@ def prepare_filter_query(name: str, filters: dict):
         query = query.where(Product.name.ilike(f"%{name}%"))
 
     for key, value in filters.items():
-        if key.endswith("_from"):
-            query = query.where(Product.properties.any(ProductProperty.int_value >= int(value)))
-        elif key.endswith("_to"):
-            query = query.where(Product.properties.any(ProductProperty.int_value <= int(value)))
+        if key.endswith("_from") or key.endswith("_to"):
+            _, property_uid, filter_type = key.split("_")
+            if filter_type == "from":
+                query = query.where(
+                    Product.properties.any(
+                        and_(ProductProperty.property_id == property_uid, ProductProperty.int_value >= int(value))
+                    )
+                )
+            elif filter_type == "to":
+                query = query.where(
+                    Product.properties.any(
+                        and_(ProductProperty.property_id == property_uid, ProductProperty.int_value <= int(value))
+                    )
+                )
         else:
             values = value if isinstance(value, list) else [value]
             query = query.where(Product.properties.any(ProductProperty.property_id.in_(values)))
